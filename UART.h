@@ -1,25 +1,36 @@
-// Prototypes
-// Initialization
-UART_Ini(uint8_t com, uint32_t baudrate, uint8_t size, uint8_t parity, uint8_t stop)
+#ifndef UART_H
+#define UART_H
 
-// Send
-void UART_puts(uint8_t com, char *str);
+#include <stdint.h>
+#include <avr/io.h>
+
+// ===== API p�blica =====
+void UART_Ini(uint8_t com, uint32_t baudrate, uint8_t size, uint8_t parity, uint8_t stop);
 void UART_putchar(uint8_t com, char data);
-
-// Received
+void UART_puts(uint8_t com, const char *str);
 uint8_t UART_available(uint8_t com);
-char UART_getchar(uint8_t com );
-void UART_gets(uint8_t com, char *str);
+char UART_getchar(uint8_t com);
 
-// Escape sequences
-UART_clrscr( uint8_t com );
-UART_setColor(uint8_t com, uint8_t color);
-UART_gotoxy(uint8_t com, uint8_t x, uint8_t y);
+// Utilidades
+void UART_gets(uint8_t com, char *buf, uint16_t maxlen, uint8_t echo);
+uint16_t atoi_u16(const char *s);
+void itoa_u16(uint16_t v, char *buf);
 
-#define YELLOW  0 // Fixme 
-#define GREEN   0 // Fixme 
-#define BLUE    0 // Fixme 
+// ANSI helpers
+void UART_clrscr(uint8_t com);
+void UART_gotoxy(uint8_t com, uint8_t row, uint8_t col);
+void UART_setColor(uint8_t com, uint8_t color);
 
-// Utils
-void itoa(uint16_t number, char* str, uint8_t base) 
-uint16_t atoi(char *str)
+// Colores ANSI (b�sicos)
+enum {
+  ANSI_RESET  = 0,
+  ANSI_RED    = 31,
+  ANSI_GREEN  = 32,
+  ANSI_YELLOW = 33,
+  ANSI_BLUE   = 34,
+  ANSI_MAGENTA= 35,
+  ANSI_CYAN   = 36,
+  ANSI_WHITE  = 37
+};
+
+#endif // UART_H
